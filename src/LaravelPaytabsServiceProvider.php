@@ -21,7 +21,7 @@ class LaravelPaytabsServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('laravel-paytabs.php'),
+                __DIR__.'/../config/config.php' => config_path('laravel-paytabs.php'),
             ], 'config');
 
             // Publishing the views.
@@ -50,11 +50,10 @@ class LaravelPaytabsServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'laravel-paytabs');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-paytabs');
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-paytabs', function () {
-
             return new LaravelPaytabs(config('laravel-paytabs'));
         });
     }

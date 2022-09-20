@@ -10,7 +10,6 @@ use Devinweb\LaravelPaytabs\Tests\TestCase;
 
 class InitiateTransactionTest extends TestCase
 {
-
     protected $user;
 
     protected $cart;
@@ -29,7 +28,6 @@ class InitiateTransactionTest extends TestCase
 
         $transactionType = $this->faker->randomElement([TransactionType::REFUND, TransactionType::CAPTURE, TransactionType::VOID]);
         $transaction = LaravelPaytabs::setCustomer($this->user)->setCart($this->cart)->initiate($transactionType, TransactionClass::ECOM);
-
     }
 
     /** @test */
@@ -39,8 +37,8 @@ class InitiateTransactionTest extends TestCase
 
         $transactionClass = $this->faker->word;
         $transaction = LaravelPaytabs::setCustomer($this->user)->setCart($this->cart)->initiate(TransactionType::SALE, $transactionClass);
-
     }
+
     /** @test */
     public function a_transaction_can_be_initiated_successfully()
     {
@@ -52,17 +50,17 @@ class InitiateTransactionTest extends TestCase
             ->getMock();
 
         $mock->expects($this->once())->method('post')
-            ->with($this->equalTo($config->get('paytabs_api') . "payment/request"),
+            ->with($this->equalTo($config->get('paytabs_api').'payment/request'),
                 $this->equalTo([
-                    "profile_id" => $config->get('profile_id'),
-                    "tran_type" => $transactionType,
-                    "tran_class" => TransactionClass::ECOM,
-                    "paypage_lang" => $config->get('lang') ?: app()->getLocale(),
-                    "return" => $config->get('redirect_url'),
-                    "cart_amount" => $this->cart['amount'],
-                    "cart_currency" => $config->get('currency'),
-                    "cart_id" => $this->cart['id'],
-                    "cart_description" => $this->cart['description'],
+                    'profile_id' => $config->get('profile_id'),
+                    'tran_type' => $transactionType,
+                    'tran_class' => TransactionClass::ECOM,
+                    'paypage_lang' => $config->get('lang') ?: app()->getLocale(),
+                    'return' => $config->get('redirect_url'),
+                    'cart_amount' => $this->cart['amount'],
+                    'cart_currency' => $config->get('currency'),
+                    'cart_id' => $this->cart['id'],
+                    'cart_description' => $this->cart['description'],
                 ])
             );
         $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
@@ -83,7 +81,7 @@ class InitiateTransactionTest extends TestCase
 
         $mock->expects($this->once())->method('post')
             ->with(
-                $this->equalTo($config->get('paytabs_api') . "payment/request"),
+                $this->equalTo($config->get('paytabs_api').'payment/request'),
                 $this->callback(function ($attributes) use ($url) {
                     return $attributes['return'] == $url;
                 })
@@ -106,18 +104,18 @@ class InitiateTransactionTest extends TestCase
 
         $mock->expects($this->once())->method('post')
             ->with(
-                $this->equalTo($config->get('paytabs_api') . "payment/request"),
+                $this->equalTo($config->get('paytabs_api').'payment/request'),
                 $this->callback(function ($attributes) {
-                    return $attributes["customer_details"] == [
-                        "name" => $this->user->name,
-                        "email" => $this->user->email,
-                        "phone" => $this->user->phone,
-                        "street1" => $this->user->address,
-                        "city" => $this->user->city,
-                        "state" => $this->user->state,
-                        "country" => $this->user->country,
-                        "zip" => $this->user->zip,
-                        "ip" => "",
+                    return $attributes['customer_details'] == [
+                        'name' => $this->user->name,
+                        'email' => $this->user->email,
+                        'phone' => $this->user->phone,
+                        'street1' => $this->user->address,
+                        'city' => $this->user->city,
+                        'state' => $this->user->state,
+                        'country' => $this->user->country,
+                        'zip' => $this->user->zip,
+                        'ip' => '',
                     ];
                 })
             );
@@ -139,9 +137,9 @@ class InitiateTransactionTest extends TestCase
 
         $mock->expects($this->once())->method('post')
             ->with(
-                $this->equalTo($config->get('paytabs_api') . "payment/request"),
+                $this->equalTo($config->get('paytabs_api').'payment/request'),
                 $this->callback(function ($attributes) {
-                    return isset($attributes["framed"]) && $attributes["framed"] === true && isset($attributes["hide_shipping"]) && $attributes["hide_shipping"] === true;
+                    return isset($attributes['framed']) && $attributes['framed'] === true && isset($attributes['hide_shipping']) && $attributes['hide_shipping'] === true;
                 })
             );
         $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
@@ -150,5 +148,4 @@ class InitiateTransactionTest extends TestCase
             ->setCart($this->cart)
             ->initiate($transactionType, TransactionClass::ECOM);
     }
-
 }

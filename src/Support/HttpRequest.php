@@ -10,13 +10,13 @@ use InvalidArgumentException;
 
 class HttpRequest
 {
-
     /**
      * Create a post sever-to-server request.
      *
      * @param  string  $url
      * @param  array  $parameters
      * @return Response
+     *
      * @throws InvalidArgumentException
      * @throws RequestException
      */
@@ -29,9 +29,10 @@ class HttpRequest
                 'Content-Type' => 'application/json',
             ])->post($url, $parameters);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 throw new InvalidArgumentException($response->body());
             }
+
             return $response;
         } catch (RequestException $e) {
             return $e->getResponse();
