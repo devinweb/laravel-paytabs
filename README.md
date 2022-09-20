@@ -2,6 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/devinweb/laravel-paytabs.svg?style=flat-square)](https://packagist.org/packages/devinweb/laravel-paytabs)
 [![Total Downloads](https://img.shields.io/packagist/dt/devinweb/laravel-paytabs.svg?style=flat-square)](https://packagist.org/packages/devinweb/laravel-paytabs)
+<a href="https://github.styleci.io/repos/534237521"><img src="https://github.styleci.io/repos/534237521/shield?branch=master" alt="StyleCI Shield"></a>
 ![GitHub Actions](https://github.com/devinweb/laravel-paytabs/actions/workflows/main.yml/badge.svg)
 
 
