@@ -10,7 +10,6 @@ use Devinweb\LaravelPaytabs\Tests\TestCase;
 
 class FollowUpTransactionTest extends TestCase
 {
-
     protected $cart;
 
     public function setUp(): void
@@ -26,7 +25,6 @@ class FollowUpTransactionTest extends TestCase
 
         $transactionType = $this->faker->randomElement([TransactionType::AUTH, TransactionType::SALE]);
         $transaction = LaravelPaytabs::setCart($this->cart)->setTransactionRef($this->faker->text(9))->followUpTransaction($transactionType, TransactionClass::ECOM);
-
     }
 
     /** @test */
@@ -36,7 +34,6 @@ class FollowUpTransactionTest extends TestCase
 
         $transactionClass = $this->faker->word;
         $transaction = LaravelPaytabs::setCart($this->cart)->setTransactionRef($this->faker->text(9))->followUpTransaction(TransactionType::REFUND, $transactionClass);
-
     }
 
     /** @test */
@@ -50,16 +47,16 @@ class FollowUpTransactionTest extends TestCase
             ->getMock();
         $tranRef = $this->faker->text(9);
         $mock->expects($this->once())->method('post')
-            ->with($this->equalTo($config->get('paytabs_api') . "payment/request"),
+            ->with($this->equalTo($config->get('paytabs_api').'payment/request'),
                 $this->equalTo([
-                    "profile_id" => $config->get('profile_id'),
-                    "tran_type" => $transactionType,
-                    "tran_class" => TransactionClass::ECOM,
-                    "tran_ref" => $tranRef,
-                    "cart_amount" => $this->cart['amount'],
-                    "cart_currency" => $config->get('currency'),
-                    "cart_id" => $this->cart['id'],
-                    "cart_description" => $this->cart['description'],
+                    'profile_id' => $config->get('profile_id'),
+                    'tran_type' => $transactionType,
+                    'tran_class' => TransactionClass::ECOM,
+                    'tran_ref' => $tranRef,
+                    'cart_amount' => $this->cart['amount'],
+                    'cart_currency' => $config->get('currency'),
+                    'cart_id' => $this->cart['id'],
+                    'cart_description' => $this->cart['description'],
                 ])
             );
 
@@ -78,10 +75,10 @@ class FollowUpTransactionTest extends TestCase
             ->getMock();
         $tranRef = $this->faker->text(9);
         $mock->expects($this->once())->method('post')
-            ->with($this->equalTo($config->get('paytabs_api') . "payment/query"),
+            ->with($this->equalTo($config->get('paytabs_api').'payment/query'),
                 $this->equalTo([
-                    "profile_id" => $config->get('profile_id'),
-                    "tran_ref" => $tranRef,
+                    'profile_id' => $config->get('profile_id'),
+                    'tran_ref' => $tranRef,
                 ])
             );
 
@@ -89,5 +86,4 @@ class FollowUpTransactionTest extends TestCase
             ->setTransactionRef($tranRef)
             ->getTransaction();
     }
-
 }

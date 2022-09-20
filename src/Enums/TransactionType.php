@@ -1,4 +1,5 @@
 <?php
+
 namespace Devinweb\LaravelPaytabs\Enums;
 
 abstract class TransactionType
@@ -10,9 +11,9 @@ abstract class TransactionType
     const CAPTURE = 'capture';
 
     /**
-     * Check if the given type is a follow up transaction type
+     * Check if the given type is a follow up transaction type.
      *
-     * @param  string $transactionType
+     * @param  string  $transactionType
      * @return bool
      */
     public static function isFollowUpType($transactionType): bool
@@ -21,14 +22,13 @@ abstract class TransactionType
     }
 
     /**
-     * Check if the given type is a initaite transaction type
+     * Check if the given type is a initaite transaction type.
      *
-     * @param  string $transactionType
+     * @param  string  $transactionType
      * @return bool
      */
     public static function isInitiateType($transactionType): bool
     {
         return in_array($transactionType, [self::SALE, self::AUTH]);
     }
-
 }
