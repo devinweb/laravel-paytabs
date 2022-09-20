@@ -10,7 +10,7 @@ use InvalidArgumentException;
 final class InitiateTransactionHelper extends TransactionHelper
 {
     /**
-     * @var array $pageSettings
+     * @var array
      */
     protected $pageSettings;
 
@@ -21,10 +21,11 @@ final class InitiateTransactionHelper extends TransactionHelper
     }
 
     /**
-     * Initiate the paytabs transaction
-     * @param  \Illuminate\Database\Eloquent\Model $user
-     * @param  array $cart
-     * @param  string $redirectUrl
+     * Initiate the paytabs transaction.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  array  $cart
+     * @param  string  $redirectUrl
      * @return array
      */
     public function initiate($user, $cart, $redirectUrl = null)
@@ -33,28 +34,30 @@ final class InitiateTransactionHelper extends TransactionHelper
         $config = LaravelPaytabs::config();
         $attributes = $this->prepareRequest($config, $cart, $user, $redirectUrl);
         $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/request", $attributes);
+
         return $response->json();
     }
 
     /**
-     * Prepare initiate paytabs transaction request
+     * Prepare initiate paytabs transaction request.
      *
-     * @param  \Illuminate\Support\Collection $config
-     * @param  array $cart
-     * @param \Illuminate\Database\Eloquent\Model $user
-     * @param  string $redirectUrl
+     * @param  \Illuminate\Support\Collection  $config
+     * @param  array  $cart
+     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  string  $redirectUrl
      * @return array
      */
     protected function prepareRequest($config, $cart, $user = null, $redirectUrl = null): array
     {
         $callbackUrl = $redirectUrl ?: $config->get('redirect_url');
+
         return array_merge(
             [
-                "profile_id" => $config->get('profile_id'),
-                "tran_type" => $this->transactionType,
-                "tran_class" => $this->transactionClass,
-                "paypage_lang" => $config->get('lang') ?: app()->getLocale(),
-                "return" => $callbackUrl,
+                'profile_id' => $config->get('profile_id'),
+                'tran_type' => $this->transactionType,
+                'tran_class' => $this->transactionClass,
+                'paypage_lang' => $config->get('lang') ?: app()->getLocale(),
+                'return' => $callbackUrl,
             ],
             $this->getCartDetails($config, $cart),
             $this->getCustomerDetails($user),
@@ -63,20 +66,20 @@ final class InitiateTransactionHelper extends TransactionHelper
     }
 
     /**
-     * Validate the transaction parameters
+     * Validate the transaction parameters.
      *
      * @return void
+     *
      * @throws InvalidArgumentException
      */
     protected function validateTransaction()
     {
-        if (!TransactionType::isInitiateType($this->transactionType)) {
+        if (! TransactionType::isInitiateType($this->transactionType)) {
             throw new InvalidArgumentException("Transaction type {$this->transactionType} not supported.");
         }
 
-        if (!in_array($this->transactionClass, TransactionClass::values())) {
+        if (! in_array($this->transactionClass, TransactionClass::values())) {
             throw new InvalidArgumentException("Transaction class {$this->transactionClass} not supported.");
         }
-
     }
 }
