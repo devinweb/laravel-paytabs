@@ -1,3 +1,5 @@
+<p align="center"><img src="/art/socialcard.png" alt="Laravel Paytabs"></p>
+
 # Laravel Paytabs
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/devinweb/laravel-paytabs.svg?style=flat-square)](https://packagist.org/packages/devinweb/laravel-paytabs)
