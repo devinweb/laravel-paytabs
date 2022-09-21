@@ -2,9 +2,9 @@ name: Psalm
 
 on:
   push:
-    paths:
-      - "**.php"
-      - "psalm.xml.dist"
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
   psalm:
