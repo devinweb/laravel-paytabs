@@ -44,7 +44,7 @@ jobs:
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Psalm
-        uses: docker://vimeo/psalm-github-actions
+        run: ./vendor/bin/psalm --no-cache
 
       - name: Execute tests
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
