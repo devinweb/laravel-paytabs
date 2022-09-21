@@ -62,7 +62,7 @@ final class FollowUpTransactionHelper extends TransactionHelper
      * @param  string  $redirectUrl
      * @return array
      */
-    protected function prepareRequest($config, $cart, $user = null, $redirect_url = null): array
+    protected function prepareRequest($config, $cart, $user = null, $redirectUrl = null): array
     {
         return array_merge(
             [

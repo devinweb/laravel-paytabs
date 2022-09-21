@@ -29,7 +29,7 @@ abstract class TransactionHelper
      *
      * @return array
      */
-    abstract protected function prepareRequest($config, $cart, $user = null, $redirect_url = null): array;
+    abstract protected function prepareRequest($config, $cart, $user = null, $redirectUrl = null): array;
 
     /**
      * Validate the transaction parameters.
