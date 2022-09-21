@@ -43,9 +43,6 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-      - name: Psalm
-        run: ./vendor/bin/psalm --no-cache
-
       - name: Execute tests
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
