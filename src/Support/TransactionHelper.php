@@ -87,7 +87,6 @@ abstract class TransactionHelper
     }
     protected function save($transaction, $status, $user, $parent = null)
     {
-        // dd($transaction);
         $attributes = [
             'user_id' => $user->id,
             'transaction_ref' => $transaction['tran_ref'],

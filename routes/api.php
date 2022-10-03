@@ -1,6 +1,6 @@
 <?php
 
-use Devinweb\LaravelPaytabs\Http\Controllers\FinalizeTransaction;
+use Devinweb\LaravelPaytabs\Http\Controllers\FinalizeTransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::post('/paytabs/finalize', FinalizeTransaction::class);
+Route::post('/paytabs/finalize', FinalizeTransactionController::class);

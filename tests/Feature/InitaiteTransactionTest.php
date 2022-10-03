@@ -57,7 +57,7 @@ class InitiateTransactionTest extends TestCase
                     "profile_id" => $config->get('profile_id'),
                     "tran_type" => $transactionType,
                     "tran_class" => TransactionClass::ECOM,
-                    "paypage_lang" => $config->get('lang') ?: app()->getLocale(),
+                    "paypage_lang" => $config->get('lang'),
                     "return" => 'http://localhost/api/paytabs/finalize',
                     "cart_amount" => $this->cart['amount'],
                     "cart_currency" => $config->get('currency'),

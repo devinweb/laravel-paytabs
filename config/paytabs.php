@@ -75,6 +75,6 @@ return [
     | The hosted payment page lang
     |
      */
-    'lang' => '',
-    'model' => env('PAYMENT_MODEL', class_exists(App\Models\User::class) ? App\Models\User::class : App\User::class),
+    'lang' => env('PAYTABS_LANG', app()->getLocale()),
+    'model' => class_exists(App\Models\User::class) ? App\Models\User::class : App\User::class,
 ];

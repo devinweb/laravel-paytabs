@@ -36,8 +36,7 @@ final class InitiateTransactionHelper extends TransactionHelper
         $config = LaravelPaytabs::config();
         $attributes = $this->prepareRequest($config, $cart, $user);
 
-        $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/request", $attributes)->content();
-        $response = json_decode($response, true);
+        $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/request", $attributes)->getData(true);
         $this->save($response, 'pending', $user);
         $this->cacheRedirectUrl($response['tran_ref'], $redirectUrl ?: $config->get('redirect_url'));
         return $response;
@@ -63,7 +62,7 @@ final class InitiateTransactionHelper extends TransactionHelper
                 "profile_id" => $config->get('profile_id'),
                 "tran_type" => $this->transactionType,
                 "tran_class" => $this->transactionClass,
-                "paypage_lang" => $config->get('lang') ?: app()->getLocale(),
+                "paypage_lang" => $config->get('lang'),
                 "return" => config('app.url') . "/api/paytabs/finalize",
             ],
 
