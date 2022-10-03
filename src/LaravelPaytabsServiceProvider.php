@@ -21,7 +21,7 @@ class LaravelPaytabsServiceProvider extends ServiceProvider
         Route::prefix('api')
             ->middleware('api')
         // ->namespace("Devinweb\LaravelPaytabs\Http\Controller")
-            ->group(__DIR__ . '/../Routes/api.php');
+            ->group(__DIR__ . '/../routes/api.php');
     }
 
     protected function registerPublishing()
