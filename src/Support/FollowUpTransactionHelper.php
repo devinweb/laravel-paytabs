@@ -37,6 +37,7 @@ final class FollowUpTransactionHelper extends TransactionHelper
         if (isset($response['payment_result']) && $response['payment_result']['response_status'] == 'A') {
             $this->save($response, 'paid', $user, $this->transactionRef);
         }
+
         return $response;
     }
 

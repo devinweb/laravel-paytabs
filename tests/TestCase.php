@@ -20,9 +20,10 @@ abstract class TestCase extends OrchestraTestCase
 
     protected function defineDatabaseMigrations()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadLaravelMigrations();
     }
+
     protected function getPackageProviders($app)
     {
         return [LaravelPaytabsServiceProvider::class];
