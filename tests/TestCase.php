@@ -10,6 +10,7 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 abstract class TestCase extends OrchestraTestCase
 {
     use WithFaker;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -26,10 +27,12 @@ abstract class TestCase extends OrchestraTestCase
     {
         return [LaravelPaytabsServiceProvider::class];
     }
+
     protected function getEnvironmentSetUp($app)
     {
         // perform environment setup
     }
+
     protected function createCustomer(): User
     {
         return User::create(
@@ -39,7 +42,6 @@ abstract class TestCase extends OrchestraTestCase
                 'password' => $this->faker->sentence,
             ]
         );
-
     }
 
     protected function createCart()
@@ -50,6 +52,5 @@ abstract class TestCase extends OrchestraTestCase
             'description' => $this->faker->sentence,
 
         ];
-
     }
 }

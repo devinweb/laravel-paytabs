@@ -10,42 +10,42 @@ use Illuminate\Database\Eloquent\Model;
 class LaravelPaytabs
 {
     /**
-     * @var \Illuminate\Database\Eloquent\Model $customer
+     * @var \Illuminate\Database\Eloquent\Model
      */
     protected $customer;
 
     /**
-     * @var array $cart
+     * @var array
      */
     protected $cart;
 
     /**
-     * @var string $transactionRef
+     * @var string
      */
     protected $transactionRef;
 
     /**
-     * @var \Illuminate\Support\Collection $config
+     * @var \Illuminate\Support\Collection
      */
     protected $config;
 
     /**
-     * @var string $redirectUrl
+     * @var string
      */
     protected $redirectUrl;
 
     /**
-     * @var mixed $httpRequestHandler
+     * @var mixed
      */
     public $httpRequestHandler;
 
     /**
-     * @var bool $hideShipping
+     * @var bool
      */
     protected $hideShipping = false;
 
     /**
-     * @var bool $framed
+     * @var bool
      */
     protected $framed = false;
 
@@ -56,18 +56,19 @@ class LaravelPaytabs
     }
 
     /**
-     * Set the http server request handler for tests
+     * Set the http server request handler for tests.
      *
      * @return $this
      */
     public function injectHttpRequestHandler($handler)
     {
         $this->httpRequestHandler = $handler;
+
         return $this;
     }
 
     /**
-     * Return paytabs config
+     * Return paytabs config.
      *
      * @return \Illuminate\Support\Collection $config
      */
@@ -77,86 +78,93 @@ class LaravelPaytabs
     }
 
     /**
-     * Set redirectUrl value
+     * Set redirectUrl value.
      *
-     * @param  string $url
+     * @param  string  $url
      * @return $this
      */
     public function setRedirectUrl(string $url)
     {
         $this->redirectUrl = $url;
+
         return $this;
     }
 
     /**
-     * Set customer value
+     * Set customer value.
      *
-     * @param  Model $customer
+     * @param  Model  $customer
      * @return $this
      */
     public function setCustomer(Model $customer)
     {
         $this->customer = $customer;
+
         return $this;
     }
 
     /**
-     * Set cart details value
+     * Set cart details value.
      *
-     * @param array $cart
+     * @param  array  $cart
      * @return $this
      */
     public function setCart(array $cart)
     {
         $this->cart = $cart;
+
         return $this;
     }
 
     /**
-     * Hide Shipping Details
+     * Hide Shipping Details.
      *
      * @return $this
      */
     public function hideShipping()
     {
         $this->hideShipping = true;
+
         return $this;
     }
 
     /**
-     * Display the hosted payment page in an embed frame
+     * Display the hosted payment page in an embed frame.
      *
      * @return $this
      */
     public function framedPage()
     {
         $this->framed = true;
+
         return $this;
     }
 
     /**
-     * Set transaction reference value
+     * Set transaction reference value.
      *
-     * @param  string $transactionRef
+     * @param  string  $transactionRef
      * @return $this
      */
     public function setTransactionRef($transactionRef)
     {
         $this->transactionRef = $transactionRef;
+
         return $this;
     }
 
     /**
-     * Initiate a transaction
+     * Initiate a transaction.
      *
-     * @param  string $transactionType
-     * @param  string $transactionClass
+     * @param  string  $transactionType
+     * @param  string  $transactionClass
      * @return mixed
      */
     public function initiate($transactionType, $transactionClass)
     {
         $initiateHelper = new InitiateTransactionHelper($transactionType, $transactionClass, $this->paymentPageSettings());
         $initiateHelper->setHttpRequestHandler($this->httpRequestHandler);
+
         return $initiateHelper->initiate(
             $this->customer,
             $this->cart,
@@ -165,16 +173,17 @@ class LaravelPaytabs
     }
 
     /**
-     * Perform an actions on an initaited or done payment
+     * Perform an actions on an initaited or done payment.
      *
-     * @param  string $transactionType
-     * @param  string $transactionClass
+     * @param  string  $transactionType
+     * @param  string  $transactionClass
      * @return mixed
      */
     public function followUpTransaction($transactionType, $transactionClass)
     {
         $followUpHelper = new FollowUpTransactionHelper($this->transactionRef, $transactionType, $transactionClass);
         $followUpHelper->setHttpRequestHandler($this->httpRequestHandler);
+
         return $followUpHelper->followUpTransaction(
             $this->customer,
             $this->cart
@@ -182,7 +191,7 @@ class LaravelPaytabs
     }
 
     /**
-     * Get the details of a transaction
+     * Get the details of a transaction.
      *
      * @return mixed
      */
@@ -190,11 +199,12 @@ class LaravelPaytabs
     {
         $followUpHelper = new FollowUpTransactionHelper($this->transactionRef);
         $followUpHelper->setHttpRequestHandler($this->httpRequestHandler);
+
         return $followUpHelper->getTransaction();
     }
 
     /**
-     * Get payment page settings
+     * Get payment page settings.
      *
      * @return array
      */

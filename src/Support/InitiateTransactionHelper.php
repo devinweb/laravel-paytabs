@@ -12,7 +12,7 @@ use InvalidArgumentException;
 final class InitiateTransactionHelper extends TransactionHelper
 {
     /**
-     * @var array $pageSettings
+     * @var array
      */
     protected $pageSettings;
 
@@ -23,10 +23,11 @@ final class InitiateTransactionHelper extends TransactionHelper
     }
 
     /**
-     * Initiate the paytabs transaction
-     * @param  \Illuminate\Database\Eloquent\Model $user
-     * @param  array $cart
-     * @param  string $redirectUrl
+     * Initiate the paytabs transaction.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  array  $cart
+     * @param  string  $redirectUrl
      * @return array
      */
     public function initiate($user, $cart, $redirectUrl = null)
@@ -47,12 +48,12 @@ final class InitiateTransactionHelper extends TransactionHelper
         Cache::put($tranRef, $redirectUrl, 60 * 60);
     }
     /**
-     * Prepare initiate paytabs transaction request
+     * Prepare initiate paytabs transaction request.
      *
-     * @param  \Illuminate\Support\Collection $config
-     * @param  array $cart
-     * @param \Illuminate\Database\Eloquent\Model $user
-     * @param  string $redirectUrl
+     * @param  \Illuminate\Support\Collection  $config
+     * @param  array  $cart
+     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  string  $redirectUrl
      * @return array
      */
     protected function prepareRequest($config, $cart, $user = null): array
@@ -73,9 +74,10 @@ final class InitiateTransactionHelper extends TransactionHelper
     }
 
     /**
-     * Validate the transaction parameters
+     * Validate the transaction parameters.
      *
      * @return void
+     *
      * @throws InvalidArgumentException
      */
     protected function validateTransaction()
@@ -87,6 +89,5 @@ final class InitiateTransactionHelper extends TransactionHelper
         if (!in_array($this->transactionClass, TransactionClass::values())) {
             throw new InvalidArgumentException("Transaction class {$this->transactionClass} not supported.");
         }
-
     }
 }

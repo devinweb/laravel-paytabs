@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Http;
 
 class InitiateTransactionTest extends TestCase
 {
-
     protected $user;
 
     protected $cart;
@@ -31,7 +30,6 @@ class InitiateTransactionTest extends TestCase
 
         $transactionType = $this->faker->randomElement([TransactionType::REFUND, TransactionType::CAPTURE, TransactionType::VOID]);
         $transaction = LaravelPaytabs::setCustomer($this->user)->setCart($this->cart)->initiate($transactionType, TransactionClass::ECOM);
-
     }
 
     /** @test */
@@ -41,8 +39,8 @@ class InitiateTransactionTest extends TestCase
 
         $transactionClass = $this->faker->word;
         $transaction = LaravelPaytabs::setCustomer($this->user)->setCart($this->cart)->initiate(TransactionType::SALE, $transactionClass);
-
     }
+
     /** @test */
     public function a_transaction_can_be_initiated_successfully()
     {
@@ -54,7 +52,7 @@ class InitiateTransactionTest extends TestCase
             ->getMock();
         Http::fake();
         $mock->expects($this->once())->method('post')
-            ->with($this->equalTo($config->get('paytabs_api') . "payment/request"),
+            ->with($this->equalTo($config->get('paytabs_api') . 'payment/request'),
                 $this->equalTo([
                     "profile_id" => $config->get('profile_id'),
                     "tran_type" => $transactionType,
@@ -108,7 +106,7 @@ class InitiateTransactionTest extends TestCase
 
         $mock->expects($this->once())->method('post')
             ->with(
-                $this->equalTo($config->get('paytabs_api') . "payment/request"),
+                $this->equalTo($config->get('paytabs_api') . 'payment/request'),
                 $this->callback(function ($attributes) use ($url) {
                     return $attributes['return'] == 'http://localhost/api/paytabs/finalize';
                 })
@@ -142,9 +140,9 @@ class InitiateTransactionTest extends TestCase
 
         $mock->expects($this->once())->method('post')
             ->with(
-                $this->equalTo($config->get('paytabs_api') . "payment/request"),
+                $this->equalTo($config->get('paytabs_api') . 'payment/request'),
                 $this->callback(function ($attributes) {
-                    return isset($attributes["framed"]) && $attributes["framed"] === true && isset($attributes["hide_shipping"]) && $attributes["hide_shipping"] === true;
+                    return isset($attributes['framed']) && $attributes['framed'] === true && isset($attributes['hide_shipping']) && $attributes['hide_shipping'] === true;
                 })
             )->willReturn(response()->json([
             "tran_ref" => "TST2227200594762",
@@ -161,5 +159,4 @@ class InitiateTransactionTest extends TestCase
             ->setCart($this->cart)
             ->initiate($transactionType, TransactionClass::ECOM);
     }
-
 }

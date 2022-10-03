@@ -1,4 +1,5 @@
 <?php
+
 namespace Devinweb\LaravelPaytabs\Enums;
 
 abstract class TransactionClass
@@ -8,7 +9,7 @@ abstract class TransactionClass
     const RECURRING = 'recurring';
 
     /**
-     * Return the supported classes as array
+     * Return the supported classes as array.
      *
      * @return array
      */
@@ -16,5 +17,4 @@ abstract class TransactionClass
     {
         return [self::ECOM];
     }
-
 }

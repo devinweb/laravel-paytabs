@@ -10,13 +10,13 @@ use InvalidArgumentException;
 
 class HttpRequest
 {
-
     /**
      * Create a post sever-to-server request.
      *
      * @param  string  $url
      * @param  array  $parameters
      * @return Response
+     *
      * @throws InvalidArgumentException
      * @throws RequestException
      */
