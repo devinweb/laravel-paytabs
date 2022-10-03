@@ -32,6 +32,7 @@ class HttpRequest
             if (!$response->successful()) {
                 throw new InvalidArgumentException($response->body());
             }
+
             return response()->json($response->json(), $response->status());
         } catch (RequestException $e) {
             return $e->getResponse();
