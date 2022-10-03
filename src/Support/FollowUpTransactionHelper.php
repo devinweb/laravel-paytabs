@@ -5,6 +5,7 @@ namespace Devinweb\LaravelPaytabs\Support;
 use Devinweb\LaravelPaytabs\Enums\TransactionClass;
 use Devinweb\LaravelPaytabs\Enums\TransactionType;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
+use Devinweb\LaravelPaytabs\Models\Transaction;
 use InvalidArgumentException;
 
 final class FollowUpTransactionHelper extends TransactionHelper
@@ -25,14 +26,17 @@ final class FollowUpTransactionHelper extends TransactionHelper
      * @param  array $cart
      * @return array
      */
-    public function followUpTransaction($cart)
+    public function followUpTransaction($user, $cart)
     {
         $this->validateTransaction();
         $config = LaravelPaytabs::config();
         $attributes = $this->prepareRequest($config, $cart);
-        $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/request", $attributes);
-
-        return $response->json();
+        $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/request", $attributes)->content();
+        $response = json_decode($response, true);
+        if (isset($response['payment_result']) && $response['payment_result']['response_status'] == 'A') {
+            $this->save($response, 'paid', $user, $this->transactionRef);
+        }
+        return $response;
     }
 
     /**
@@ -49,7 +53,7 @@ final class FollowUpTransactionHelper extends TransactionHelper
         ];
         $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/query", $attributes);
 
-        return $response->json();
+        return json_decode($response->content(), true);
     }
 
     /**

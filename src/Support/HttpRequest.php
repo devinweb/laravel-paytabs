@@ -20,7 +20,7 @@ class HttpRequest
      * @throws InvalidArgumentException
      * @throws RequestException
      */
-    public function post(string $url, array $parameters): Response
+    public function post(string $url, array $parameters)
     {
         $config = LaravelPaytabs::config();
         try {
@@ -32,7 +32,7 @@ class HttpRequest
             if (!$response->successful()) {
                 throw new InvalidArgumentException($response->body());
             }
-            return $response;
+            return response()->json($response->body(), $response->status());
         } catch (RequestException $e) {
             return $e->getResponse();
         }

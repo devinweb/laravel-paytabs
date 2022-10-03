@@ -76,4 +76,5 @@ return [
     |
      */
     'lang' => '',
+    'model' => env('PAYMENT_MODEL', class_exists(App\Models\User::class) ? App\Models\User::class : App\User::class),
 ];

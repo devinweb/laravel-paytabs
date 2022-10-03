@@ -7,6 +7,8 @@ use Devinweb\LaravelPaytabs\Enums\TransactionType;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Support\HttpRequest;
 use Devinweb\LaravelPaytabs\Tests\TestCase;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 class InitiateTransactionTest extends TestCase
 {
@@ -50,7 +52,7 @@ class InitiateTransactionTest extends TestCase
         $mock = $this->getMockBuilder(HttpRequest::class)
             ->setMethods(['post'])
             ->getMock();
-
+        Http::fake();
         $mock->expects($this->once())->method('post')
             ->with($this->equalTo($config->get('paytabs_api') . "payment/request"),
                 $this->equalTo([
@@ -58,57 +60,12 @@ class InitiateTransactionTest extends TestCase
                     "tran_type" => $transactionType,
                     "tran_class" => TransactionClass::ECOM,
                     "paypage_lang" => $config->get('lang') ?: app()->getLocale(),
-                    "return" => $config->get('redirect_url'),
+                    "return" => 'http://localhost/api/paytabs/finalize',
                     "cart_amount" => $this->cart['amount'],
                     "cart_currency" => $config->get('currency'),
                     "cart_id" => $this->cart['id'],
                     "cart_description" => $this->cart['description'],
-                ])
-            );
-        $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
-            ->setCart($this->cart)
-            ->initiate($transactionType, TransactionClass::ECOM);
-    }
-
-    /** @test */
-    public function redirect_url_is_added_to_initiate_transaction_request()
-    {
-        $config = LaravelPaytabs::config();
-        $url = $this->faker->url;
-        $transactionType = $this->faker->randomElement([TransactionType::SALE, TransactionType::AUTH]);
-
-        $mock = $this->getMockBuilder(HttpRequest::class)
-            ->setMethods(['post'])
-            ->getMock();
-
-        $mock->expects($this->once())->method('post')
-            ->with(
-                $this->equalTo($config->get('paytabs_api') . "payment/request"),
-                $this->callback(function ($attributes) use ($url) {
-                    return $attributes['return'] == $url;
-                })
-            );
-        $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
-            ->setRedirectUrl($url)
-            ->setCart($this->cart)
-            ->initiate($transactionType, TransactionClass::ECOM);
-    }
-
-    /** @test */
-    public function customer_details_are_added_to_initiate_transaction_request()
-    {
-        $config = LaravelPaytabs::config();
-        $transactionType = $this->faker->randomElement([TransactionType::SALE, TransactionType::AUTH]);
-
-        $mock = $this->getMockBuilder(HttpRequest::class)
-            ->setMethods(['post'])
-            ->getMock();
-
-        $mock->expects($this->once())->method('post')
-            ->with(
-                $this->equalTo($config->get('paytabs_api') . "payment/request"),
-                $this->callback(function ($attributes) {
-                    return $attributes["customer_details"] == [
+                    'customer_details' => [
                         "name" => $this->user->name,
                         "email" => $this->user->email,
                         "phone" => $this->user->phone,
@@ -118,11 +75,57 @@ class InitiateTransactionTest extends TestCase
                         "country" => $this->user->country,
                         "zip" => $this->user->zip,
                         "ip" => "",
-                    ];
-                })
-            );
+                    ],
+                ])
+            )->willReturn(response()->json([
+            "tran_ref" => "TST2227200594762",
+            "tran_type" => "Sale",
+            "cart_currency" => "SAR",
+            "cart_amount" => "80.00",
+            "return" => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
+            "redirect_url" => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
+        ], 200));
+
         $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
             ->setCustomer($this->user)
+            ->setCart($this->cart)
+            ->initiate($transactionType, TransactionClass::ECOM);
+        $this->assertDatabaseHas('transactions', [
+            'transaction_ref' => 'TST2227200594762',
+        ]);
+    }
+
+    /** @test */
+    public function redirect_url_is_cached_successfully()
+    {
+        $config = LaravelPaytabs::config();
+        $url = $this->faker->url;
+        $transactionType = $this->faker->randomElement([TransactionType::SALE, TransactionType::AUTH]);
+        $reference = $this->faker->text(9);
+        $mock = $this->getMockBuilder(HttpRequest::class)
+            ->setMethods(['post'])
+            ->getMock();
+
+        $mock->expects($this->once())->method('post')
+            ->with(
+                $this->equalTo($config->get('paytabs_api') . "payment/request"),
+                $this->callback(function ($attributes) use ($url) {
+                    return $attributes['return'] == 'http://localhost/api/paytabs/finalize';
+                })
+            )->willReturn(response()->json([
+            "tran_ref" => $reference,
+            "tran_type" => "Sale",
+            "cart_currency" => "SAR",
+            "cart_amount" => "80.00",
+            "return" => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
+            "redirect_url" => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
+        ], 200));
+        Cache::shouldReceive('put')
+            ->once()
+            ->with($reference, $url, 60 * 60);
+        $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
+            ->setCustomer($this->user)
+            ->setRedirectUrl($url)
             ->setCart($this->cart)
             ->initiate($transactionType, TransactionClass::ECOM);
     }
@@ -143,10 +146,18 @@ class InitiateTransactionTest extends TestCase
                 $this->callback(function ($attributes) {
                     return isset($attributes["framed"]) && $attributes["framed"] === true && isset($attributes["hide_shipping"]) && $attributes["hide_shipping"] === true;
                 })
-            );
+            )->willReturn(response()->json([
+            "tran_ref" => "TST2227200594762",
+            "tran_type" => "Sale",
+            "cart_currency" => "SAR",
+            "cart_amount" => "80.00",
+            "return" => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
+            "redirect_url" => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
+        ], 200));
         $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
             ->hideShipping()
             ->framedPage()
+            ->setCustomer($this->user)
             ->setCart($this->cart)
             ->initiate($transactionType, TransactionClass::ECOM);
     }

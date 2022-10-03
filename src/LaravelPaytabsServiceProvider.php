@@ -2,6 +2,7 @@
 
 namespace Devinweb\LaravelPaytabs;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelPaytabsServiceProvider extends ServiceProvider
@@ -11,36 +12,29 @@ class LaravelPaytabsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /*
-         * Optional methods to load your package assets
-         */
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-paytabs');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-paytabs');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->registerRoutes();
+        $this->registerPublishing();
+    }
 
+    protected function registerRoutes()
+    {
+        Route::prefix('api')
+            ->middleware('api')
+        // ->namespace("Devinweb\LaravelPaytabs\Http\Controller")
+            ->group(__DIR__ . '/../Routes/api.php');
+    }
+
+    protected function registerPublishing()
+    {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('laravel-paytabs.php'),
-            ], 'config');
-
-            // Publishing the views.
-            /*$this->publishes([
-            __DIR__.'/../resources/views' => resource_path('views/vendor/laravel-paytabs'),
-            ], 'views');*/
-
-            // Publishing assets.
-            /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/laravel-paytabs'),
-            ], 'assets');*/
-
-            // Publishing the translation files.
-            /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/laravel-paytabs'),
-            ], 'lang');*/
-
-            // Registering package commands.
-            // $this->commands([]);
+                __DIR__ . '/../config/paytabs.php' => config_path('paytabs.php'),
+            ], 'paytabs-config');
+            if (!class_exists('CreateTransactionsTable')) {
+                $this->publishes([
+                    __DIR__ . '/../database/migrations/create_transactions_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_transactions_table.php'),
+                ], 'paytabs-migrations');
+            }
         }
     }
 
@@ -50,12 +44,12 @@ class LaravelPaytabsServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'laravel-paytabs');
+        $this->mergeConfigFrom(__DIR__ . '/../config/paytabs.php', 'paytabs');
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-paytabs', function () {
 
-            return new LaravelPaytabs(config('laravel-paytabs'));
+            return new LaravelPaytabs();
         });
     }
 }

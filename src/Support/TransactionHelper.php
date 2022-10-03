@@ -2,6 +2,7 @@
 
 namespace Devinweb\LaravelPaytabs\Support;
 
+use Devinweb\LaravelPaytabs\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class TransactionHelper
@@ -29,7 +30,7 @@ abstract class TransactionHelper
      *
      * @return array
      */
-    abstract protected function prepareRequest($config, $cart, $user = null, $redirect_url = null): array;
+    abstract protected function prepareRequest($config, $cart, $user = null): array;
 
     /**
      * Validate the transaction parameters
@@ -81,5 +82,23 @@ abstract class TransactionHelper
     public function setHttpRequestHandler($handler)
     {
         $this->httpRequestHandler = $handler;
+    }
+    protected function save($transaction, $status, $user, $parent = null)
+    {
+        // dd($transaction);
+        $attributes = [
+            'user_id' => $user->id,
+            'transaction_ref' => $transaction['tran_ref'],
+            'type' => $transaction['tran_type'],
+            'class' => $this->transactionClass,
+            'status' => $status,
+            'amount' => $transaction['cart_amount'],
+            'currency' => $transaction['cart_currency'],
+            'data' => $transaction,
+        ];
+        if ($parent) {
+            $attributes = array_merge($attributes, ['parent' => $parent]);
+        }
+        Transaction::create($attributes);
     }
 }

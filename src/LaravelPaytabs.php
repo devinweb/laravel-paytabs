@@ -49,10 +49,10 @@ class LaravelPaytabs
      */
     protected $framed = false;
 
-    public function __construct(array $config)
+    public function __construct()
     {
-        $this->config = collect($config);
-        $this->client = new HttpRequest();
+        $this->config = collect(config('paytabs'));
+        $this->httpRequestHandler = new HttpRequest();
     }
 
     /**
@@ -176,6 +176,7 @@ class LaravelPaytabs
         $followUpHelper = new FollowUpTransactionHelper($this->transactionRef, $transactionType, $transactionClass);
         $followUpHelper->setHttpRequestHandler($this->httpRequestHandler);
         return $followUpHelper->followUpTransaction(
+            $this->customer,
             $this->cart
         );
     }

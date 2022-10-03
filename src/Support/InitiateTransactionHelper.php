@@ -5,6 +5,8 @@ namespace Devinweb\LaravelPaytabs\Support;
 use Devinweb\LaravelPaytabs\Enums\TransactionClass;
 use Devinweb\LaravelPaytabs\Enums\TransactionType;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
+use Devinweb\LaravelPaytabs\Models\Transaction;
+use Illuminate\Support\Facades\Cache;
 use InvalidArgumentException;
 
 final class InitiateTransactionHelper extends TransactionHelper
@@ -31,11 +33,19 @@ final class InitiateTransactionHelper extends TransactionHelper
     {
         $this->validateTransaction();
         $config = LaravelPaytabs::config();
-        $attributes = $this->prepareRequest($config, $cart, $user, $redirectUrl);
-        $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/request", $attributes);
-        return $response->json();
+        $attributes = $this->prepareRequest($config, $cart, $user);
+
+        $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/request", $attributes)->content();
+        $response = json_decode($response, true);
+        $this->save($response, 'pending', $user);
+        $this->cacheRedirectUrl($response['tran_ref'], $redirectUrl ?: $config->get('redirect_url'));
+        return $response;
     }
 
+    private function cacheRedirectUrl($tranRef, $redirectUrl)
+    {
+        Cache::put($tranRef, $redirectUrl, 60 * 60);
+    }
     /**
      * Prepare initiate paytabs transaction request
      *
@@ -45,17 +55,17 @@ final class InitiateTransactionHelper extends TransactionHelper
      * @param  string $redirectUrl
      * @return array
      */
-    protected function prepareRequest($config, $cart, $user = null, $redirectUrl = null): array
+    protected function prepareRequest($config, $cart, $user = null): array
     {
-        $callbackUrl = $redirectUrl ?: $config->get('redirect_url');
         return array_merge(
             [
                 "profile_id" => $config->get('profile_id'),
                 "tran_type" => $this->transactionType,
                 "tran_class" => $this->transactionClass,
                 "paypage_lang" => $config->get('lang') ?: app()->getLocale(),
-                "return" => $callbackUrl,
+                "return" => config('app.url') . "/api/paytabs/finalize",
             ],
+
             $this->getCartDetails($config, $cart),
             $this->getCustomerDetails($user),
             $this->pageSettings

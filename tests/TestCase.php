@@ -13,10 +13,15 @@ abstract class TestCase extends OrchestraTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadLaravelMigrations();
-        $this->artisan('migrate')->run();
+        // $this->loadLaravelMigrations();
+        // $this->artisan('migrate')->run();
     }
 
+    protected function defineDatabaseMigrations()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadLaravelMigrations();
+    }
     protected function getPackageProviders($app)
     {
         return [LaravelPaytabsServiceProvider::class];
