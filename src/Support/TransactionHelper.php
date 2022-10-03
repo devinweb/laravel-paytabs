@@ -61,7 +61,7 @@ abstract class TransactionHelper
                 'zip' => $customer->zip ?: '',
                 'ip' => '',
             ],
-        ]: [];
+        ] : [];
     }
 
     /**
@@ -85,6 +85,7 @@ abstract class TransactionHelper
     {
         $this->httpRequestHandler = $handler;
     }
+
     protected function save($transaction, $status, $user, $parent = null)
     {
         // dd($transaction);

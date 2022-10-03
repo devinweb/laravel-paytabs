@@ -1,4 +1,5 @@
 <?php
+
 namespace Devinweb\LaravelPaytabs\Models;
 
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade;
@@ -39,6 +40,7 @@ class Transaction extends Model
     public function owner()
     {
         $model = LaravelPaytabsFacade::config()->get('model');
+
         return $this->belongsTo($model, (new $model)->getForeignKey());
     }
 

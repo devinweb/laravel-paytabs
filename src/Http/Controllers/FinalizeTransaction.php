@@ -23,8 +23,8 @@ class FinalizeTransaction extends Controller
         }
         if ($redirectUrl = Cache::get($request->tranRef)) {
             Cache::forget($request->tranRef);
+
             return Redirect::to($redirectUrl);
         }
-
     }
 }

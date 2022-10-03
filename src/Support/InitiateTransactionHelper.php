@@ -40,6 +40,7 @@ final class InitiateTransactionHelper extends TransactionHelper
         $response = json_decode($response, true);
         $this->save($response, 'pending', $user);
         $this->cacheRedirectUrl($response['tran_ref'], $redirectUrl ?: $config->get('redirect_url'));
+
         return $response;
     }
 
@@ -47,6 +48,7 @@ final class InitiateTransactionHelper extends TransactionHelper
     {
         Cache::put($tranRef, $redirectUrl, 60 * 60);
     }
+
     /**
      * Prepare initiate paytabs transaction request.
      *
@@ -60,11 +62,11 @@ final class InitiateTransactionHelper extends TransactionHelper
     {
         return array_merge(
             [
-                "profile_id" => $config->get('profile_id'),
-                "tran_type" => $this->transactionType,
-                "tran_class" => $this->transactionClass,
-                "paypage_lang" => $config->get('lang') ?: app()->getLocale(),
-                "return" => config('app.url') . "/api/paytabs/finalize",
+                'profile_id' => $config->get('profile_id'),
+                'tran_type' => $this->transactionType,
+                'tran_class' => $this->transactionClass,
+                'paypage_lang' => $config->get('lang') ?: app()->getLocale(),
+                'return' => config('app.url').'/api/paytabs/finalize',
             ],
 
             $this->getCartDetails($config, $cart),
@@ -82,11 +84,11 @@ final class InitiateTransactionHelper extends TransactionHelper
      */
     protected function validateTransaction()
     {
-        if (!TransactionType::isInitiateType($this->transactionType)) {
+        if (! TransactionType::isInitiateType($this->transactionType)) {
             throw new InvalidArgumentException("Transaction type {$this->transactionType} not supported.");
         }
 
-        if (!in_array($this->transactionClass, TransactionClass::values())) {
+        if (! in_array($this->transactionClass, TransactionClass::values())) {
             throw new InvalidArgumentException("Transaction class {$this->transactionClass} not supported.");
         }
     }
