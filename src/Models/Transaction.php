@@ -2,12 +2,12 @@
 namespace Devinweb\LaravelPaytabs\Models;
 
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade;
-use Devinweb\LaravelPaytabs\Traits\HasUniqueId;
+use Devinweb\LaravelPaytabs\Traits\HasUniqueID;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    use HasUniqueId;
+    use HasUniqueID;
     /**
      * Disable auto-increment.
      *

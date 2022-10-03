@@ -7,6 +7,7 @@ use Devinweb\LaravelPaytabs\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redirect;
 
 class FinalizeTransaction extends Controller
 {
@@ -22,7 +23,7 @@ class FinalizeTransaction extends Controller
         }
         if ($redirectUrl = Cache::get($request->tranRef)) {
             Cache::forget($request->tranRef);
-            return \Redirect::to($redirectUrl);
+            return Redirect::to($redirectUrl);
         }
 
     }
