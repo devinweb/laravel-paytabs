@@ -61,11 +61,11 @@ final class InitiateTransactionHelper extends TransactionHelper
     {
         return array_merge(
             [
-                "profile_id" => $config->get('profile_id'),
-                "tran_type" => $this->transactionType,
-                "tran_class" => $this->transactionClass,
-                "paypage_lang" => $config->get('lang'),
-                "return" => config('app.url') . "/api/paytabs/finalize",
+                'profile_id' => $config->get('profile_id'),
+                'tran_type' => $this->transactionType,
+                'tran_class' => $this->transactionClass,
+                'paypage_lang' => $config->get('lang'),
+                'return' => config('app.url').'/api/paytabs/finalize',
             ],
 
             $this->getCartDetails($config, $cart),
@@ -83,11 +83,11 @@ final class InitiateTransactionHelper extends TransactionHelper
      */
     protected function validateTransaction()
     {
-        if (!TransactionType::isInitiateType($this->transactionType)) {
+        if (! TransactionType::isInitiateType($this->transactionType)) {
             throw new InvalidArgumentException("Transaction type {$this->transactionType} not supported.");
         }
 
-        if (!in_array($this->transactionClass, TransactionClass::values())) {
+        if (! in_array($this->transactionClass, TransactionClass::values())) {
             throw new InvalidArgumentException("Transaction class {$this->transactionClass} not supported.");
         }
     }
