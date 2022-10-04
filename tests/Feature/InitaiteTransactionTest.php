@@ -8,7 +8,6 @@ use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Support\HttpRequest;
 use Devinweb\LaravelPaytabs\Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 
 class InitiateTransactionTest extends TestCase
 {
@@ -50,7 +49,6 @@ class InitiateTransactionTest extends TestCase
         $mock = $this->getMockBuilder(HttpRequest::class)
             ->setMethods(['post'])
             ->getMock();
-        Http::fake();
         $mock->expects($this->once())->method('post')
             ->with($this->equalTo($config->get('paytabs_api') . 'payment/request'),
                 $this->equalTo([
