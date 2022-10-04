@@ -77,30 +77,29 @@ class FinalizeTransactionTest extends TestCase
             ->with($this->transaction->transaction_ref);
         Http::fake([
             "{$config->get('paytabs_api')}payment/query" => Http::response([
-                "tran_ref" => $this->transaction->transaction_ref,
-                "tran_type" => $this->transaction->type,
-                "cart_id" => $this->cart['id'],
-                "cart_description" => $this->cart['description'],
-                "cart_currency" => "SAR",
-                "cart_amount" => $this->cart['amount'],
-                "payment_result" => [
-                    "response_status" => "A",
-                    "response_code" => "G15046",
-                    "response_message" => "Authorised",
-                    "transaction_time" => "2021-02-28T12:24:06Z",
+                'tran_ref' => $this->transaction->transaction_ref,
+                'tran_type' => $this->transaction->type,
+                'cart_id' => $this->cart['id'],
+                'cart_description' => $this->cart['description'],
+                'cart_currency' => 'SAR',
+                'cart_amount' => $this->cart['amount'],
+                'payment_result' => [
+                    'response_status' => 'A',
+                    'response_code' => 'G15046',
+                    'response_message' => 'Authorised',
+                    'transaction_time' => '2021-02-28T12:24:06Z',
                 ],
-                "payment_info" => [
-                    "card_type" => "Credit",
-                    "card_scheme" => "Visa",
-                    "payment_description" => "4111 11## #### 1111",
+                'payment_info' => [
+                    'card_type' => 'Credit',
+                    'card_scheme' => 'Visa',
+                    'payment_description' => '4111 11## #### 1111',
                 ],
             ]),
-            200]);
+            200, ]);
 
         $response = $this->post('/api/paytabs/finalize', [
             'tranRef' => $this->transaction->transaction_ref,
         ]);
         $response->assertStatus(302);
     }
-
 }

@@ -29,7 +29,7 @@ class HttpRequest
                 'Content-Type' => 'application/json',
             ])->post($url, $parameters);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 throw new InvalidArgumentException($response->body());
             }
 

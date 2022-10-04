@@ -11,6 +11,5 @@ class FinalizeTransactionController extends Controller
     public function __invoke(FinalizeTransactionRequest $request)
     {
         return app(FinalizeTransaction::class)($request);
-
     }
 }
