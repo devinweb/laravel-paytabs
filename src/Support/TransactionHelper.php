@@ -3,7 +3,7 @@
 namespace Devinweb\LaravelPaytabs\Support;
 
 use Devinweb\LaravelPaytabs\Models\Transaction;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 abstract class TransactionHelper
 {
@@ -40,29 +40,6 @@ abstract class TransactionHelper
      * @throws \InvalidArgumentException
      */
     abstract protected function validateTransaction();
-
-    /**
-     * Prepare customer details.
-     *
-     * @param  Model  $customer
-     * @return array
-     */
-    protected function getCustomerDetails(Model $customer = null): array
-    {
-        return $customer ? [
-            'customer_details' => [
-                'name' => $customer->name ?: '',
-                'email' => $customer->email ?: '',
-                'phone' => $customer->phone ?: '',
-                'street1' => $customer->address ?: '',
-                'city' => $customer->city ?: '',
-                'state' => $customer->state ?: '',
-                'country' => $customer->country ?: '',
-                'zip' => $customer->zip ?: '',
-                'ip' => '',
-            ],
-        ] : [];
-    }
 
     /**
      * Prepare cart details.

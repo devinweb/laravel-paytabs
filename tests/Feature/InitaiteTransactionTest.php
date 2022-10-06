@@ -50,7 +50,7 @@ class InitiateTransactionTest extends TestCase
             ->setMethods(['post'])
             ->getMock();
         $mock->expects($this->once())->method('post')
-            ->with($this->equalTo($config->get('paytabs_api').'payment/request'),
+            ->with($this->equalTo($config->get('paytabs_api') . 'payment/request'),
                 $this->equalTo([
                     'profile_id' => $config->get('profile_id'),
                     'tran_type' => $transactionType,
@@ -65,22 +65,22 @@ class InitiateTransactionTest extends TestCase
                         'name' => $this->user->name,
                         'email' => $this->user->email,
                         'phone' => $this->user->phone,
-                        'street1' => $this->user->address,
-                        'city' => $this->user->city,
-                        'state' => $this->user->state,
-                        'country' => $this->user->country,
-                        'zip' => $this->user->zip,
-                        'ip' => '',
+                        'street1' => null,
+                        'city' => null,
+                        'state' => null,
+                        'country' => null,
+                        'zip' => null,
+                        'ip' => \Request::ip(),
                     ],
                 ])
             )->willReturn(response()->json([
-                'tran_ref' => 'TST2227200594762',
-                'tran_type' => 'Sale',
-                'cart_currency' => 'SAR',
-                'cart_amount' => '80.00',
-                'return' => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
-                'redirect_url' => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
-            ], 200));
+            'tran_ref' => 'TST2227200594762',
+            'tran_type' => 'Sale',
+            'cart_currency' => 'SAR',
+            'cart_amount' => '80.00',
+            'return' => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
+            'redirect_url' => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
+        ], 200));
 
         $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
             ->setCustomer($this->user)
@@ -104,18 +104,18 @@ class InitiateTransactionTest extends TestCase
 
         $mock->expects($this->once())->method('post')
             ->with(
-                $this->equalTo($config->get('paytabs_api').'payment/request'),
+                $this->equalTo($config->get('paytabs_api') . 'payment/request'),
                 $this->callback(function ($attributes) {
                     return $attributes['return'] == 'http://localhost/api/paytabs/finalize';
                 })
             )->willReturn(response()->json([
-                'tran_ref' => $reference,
-                'tran_type' => 'Sale',
-                'cart_currency' => 'SAR',
-                'cart_amount' => '80.00',
-                'return' => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
-                'redirect_url' => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
-            ], 200));
+            'tran_ref' => $reference,
+            'tran_type' => 'Sale',
+            'cart_currency' => 'SAR',
+            'cart_amount' => '80.00',
+            'return' => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
+            'redirect_url' => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
+        ], 200));
         Cache::shouldReceive('put')
             ->once()
             ->with($reference, $url, 60 * 60);
@@ -138,18 +138,18 @@ class InitiateTransactionTest extends TestCase
 
         $mock->expects($this->once())->method('post')
             ->with(
-                $this->equalTo($config->get('paytabs_api').'payment/request'),
+                $this->equalTo($config->get('paytabs_api') . 'payment/request'),
                 $this->callback(function ($attributes) {
                     return isset($attributes['framed']) && $attributes['framed'] === true && isset($attributes['hide_shipping']) && $attributes['hide_shipping'] === true;
                 })
             )->willReturn(response()->json([
-                'tran_ref' => 'TST2227200594762',
-                'tran_type' => 'Sale',
-                'cart_currency' => 'SAR',
-                'cart_amount' => '80.00',
-                'return' => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
-                'redirect_url' => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
-            ], 200));
+            'tran_ref' => 'TST2227200594762',
+            'tran_type' => 'Sale',
+            'cart_currency' => 'SAR',
+            'cart_amount' => '80.00',
+            'return' => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
+            'redirect_url' => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
+        ], 200));
         $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
             ->hideShipping()
             ->framedPage()

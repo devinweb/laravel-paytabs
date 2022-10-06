@@ -2,6 +2,7 @@
 
 namespace Devinweb\LaravelPaytabs;
 
+use Devinweb\LaravelPaytabs\Contracts\BillingInterface;
 use Devinweb\LaravelPaytabs\Support\FollowUpTransactionHelper;
 use Devinweb\LaravelPaytabs\Support\HttpRequest;
 use Devinweb\LaravelPaytabs\Support\InitiateTransactionHelper;
@@ -47,7 +48,14 @@ class LaravelPaytabs
     /**
      * @var bool
      */
+    protected $hideBilling = false;
+
+    /**
+     * @var bool
+     */
     protected $framed = false;
+    protected $billingDetails;
+    protected $shippingDetails;
 
     public function __construct()
     {
@@ -129,6 +137,39 @@ class LaravelPaytabs
     }
 
     /**
+     * Hide Shipping Details.
+     *
+     * @return $this
+     */
+    public function hideBilling()
+    {
+        $this->hideBilling = true;
+
+        return $this;
+    }
+    /**
+     * Hide Shipping Details.
+     *
+     * @return $this
+     */
+    public function addBilling(BillingInterface $billing)
+    {
+        $this->billingDetails = $billing->getData();
+
+        return $this;
+    }
+    /**
+     * Hide Shipping Details.
+     *
+     * @return $this
+     */
+    public function addSipping(BillingInterface $shipping)
+    {
+        $this->shippingDetails = $billing->getData();
+
+        return $this;
+    }
+    /**
      * Display the hosted payment page in an embed frame.
      *
      * @return $this
@@ -164,6 +205,7 @@ class LaravelPaytabs
     {
         $initiateHelper = new InitiateTransactionHelper($transactionType, $transactionClass, $this->paymentPageSettings());
         $initiateHelper->setHttpRequestHandler($this->httpRequestHandler);
+        $initiateHelper->setTransactionDetails($this->billingDetails, $this->shippingDetails);
 
         return $initiateHelper->initiate(
             $this->customer,
@@ -211,7 +253,7 @@ class LaravelPaytabs
     private function paymentPageSettings()
     {
         $settings = [];
-        if ($this->hideShipping) {
+        if ($this->hideShipping || $this->hideBilling) {
             $settings['hide_shipping'] = true;
         }
 
@@ -219,6 +261,7 @@ class LaravelPaytabs
             $settings['framed'] = true;
         }
 
+        $settings['hide_billing'] = $this->hideBilling;
         return $settings;
     }
 }
