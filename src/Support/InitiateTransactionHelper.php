@@ -8,9 +8,9 @@ use Devinweb\LaravelPaytabs\Events\TransactionInitiated;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Request;
 use InvalidArgumentException;
 
 final class InitiateTransactionHelper extends TransactionHelper
