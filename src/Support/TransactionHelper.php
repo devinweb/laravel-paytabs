@@ -63,7 +63,7 @@ abstract class TransactionHelper
         $this->httpRequestHandler = $handler;
     }
 
-    protected function save($transaction, $status, $user, $parent = null)
+    protected function save($transaction, $status, $user, $parent = null): Transaction
     {
         $attributes = [
             'user_id' => $user->id,
@@ -78,6 +78,6 @@ abstract class TransactionHelper
         if ($parent) {
             $attributes = array_merge($attributes, ['parent' => $parent]);
         }
-        Transaction::create($attributes);
+        return Transaction::create($attributes);
     }
 }

@@ -35,6 +35,9 @@ final class FollowUpTransactionHelper extends TransactionHelper
         $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/request", $attributes)->getData(true);
         if (isset($response['payment_result']) && $response['payment_result']['response_status'] == 'A') {
             $this->save($response, 'paid', $user, $this->transactionRef);
+            event(new TransactionSucceed($response));
+        } else {
+            event(new TransactionFail($response));
         }
 
         return $response;
@@ -88,11 +91,11 @@ final class FollowUpTransactionHelper extends TransactionHelper
      */
     protected function validateTransaction()
     {
-        if (! TransactionType::isFollowUpType($this->transactionType)) {
+        if (!TransactionType::isFollowUpType($this->transactionType)) {
             throw new InvalidArgumentException("Transaction type {$this->transactionType} not supported.");
         }
 
-        if (! in_array($this->transactionClass, TransactionClass::values())) {
+        if (!in_array($this->transactionClass, TransactionClass::values())) {
             throw new InvalidArgumentException("Transaction class {$this->transactionClass} not supported.");
         }
     }

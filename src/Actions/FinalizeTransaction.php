@@ -20,12 +20,15 @@ class FinalizeTransaction
                 'status' => 'paid',
                 'data' => array_merge($transaction->data, $response['payment_info']),
             ]);
+            event(new TransactionSucceed($response));
+        } else {
+            event(new TransactionFail($response));
         }
 
         if ($redirectUrl = Cache::get($request->tranRef)) {
             Cache::forget($request->tranRef);
 
-            return Redirect::to($redirectUrl.app(PrepareRedirectRequest::class)($request->all()));
+            return Redirect::to($redirectUrl . app(PrepareRedirectRequest::class)($request->all()));
         }
 
     }

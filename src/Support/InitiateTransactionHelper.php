@@ -43,7 +43,7 @@ final class InitiateTransactionHelper extends TransactionHelper
         $response = $this->httpRequestHandler->post("{$config->get('paytabs_api')}payment/request", $attributes)->getData(true);
         $this->save($response, 'pending', $user);
         $this->cacheRedirectUrl($response['tran_ref'], $redirectUrl ?: $config->get('redirect_url'));
-
+        event(new TransactionInitiated($response));
         return $response;
     }
 
