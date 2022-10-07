@@ -3,7 +3,6 @@
 namespace Devinweb\LaravelPaytabs\Support;
 
 use Devinweb\LaravelPaytabs\Models\Transaction;
-use Illuminate\Support\Arr;
 
 abstract class TransactionHelper
 {
@@ -78,6 +77,7 @@ abstract class TransactionHelper
         if ($parent) {
             $attributes = array_merge($attributes, ['parent' => $parent]);
         }
+
         return Transaction::create($attributes);
     }
 }

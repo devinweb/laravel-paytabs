@@ -147,6 +147,7 @@ class LaravelPaytabs
 
         return $this;
     }
+
     /**
      * Hide Shipping Details.
      *
@@ -158,6 +159,7 @@ class LaravelPaytabs
 
         return $this;
     }
+
     /**
      * Hide Shipping Details.
      *
@@ -169,6 +171,7 @@ class LaravelPaytabs
 
         return $this;
     }
+
     /**
      * Display the hosted payment page in an embed frame.
      *
@@ -262,6 +265,7 @@ class LaravelPaytabs
         }
 
         $settings['hide_billing'] = $this->hideBilling;
+
         return $settings;
     }
 }

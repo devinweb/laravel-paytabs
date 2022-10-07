@@ -11,6 +11,7 @@ class TransactionInitiated
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $transaction;
+
     /**
      * Create a new event instance.
      *

@@ -55,7 +55,7 @@ class FollowUpTransactionTest extends TestCase
             ->getMock();
         $tranRef = $this->faker->text(9);
         $mock->expects($this->once())->method('post')
-            ->with($this->equalTo($config->get('paytabs_api') . 'payment/request'),
+            ->with($this->equalTo($config->get('paytabs_api').'payment/request'),
                 $this->equalTo([
                     'profile_id' => $config->get('profile_id'),
                     'tran_type' => $transactionType,
@@ -67,22 +67,22 @@ class FollowUpTransactionTest extends TestCase
                     'cart_description' => $this->cart['description'],
                 ])
             )->willReturn(response()->json([
-            'tran_ref' => 'TST2227200594762',
-            'tran_type' => $transactionType,
-            'cart_currency' => 'SAR',
-            'cart_amount' => '80.00',
-            "payment_result" => [
-                "response_status" => "A",
-                "response_code" => "G97111",
-                "response_message" => "Authorised",
-                "transaction_time" => "2021-04-21T09:25:11Z",
-            ],
-            "payment_info" => [
-                "card_type" => "Credit",
-                "card_scheme" => "Visa",
-                "payment_description" => "4111 11## #### 1111",
-            ],
-        ], 200));
+                'tran_ref' => 'TST2227200594762',
+                'tran_type' => $transactionType,
+                'cart_currency' => 'SAR',
+                'cart_amount' => '80.00',
+                'payment_result' => [
+                    'response_status' => 'A',
+                    'response_code' => 'G97111',
+                    'response_message' => 'Authorised',
+                    'transaction_time' => '2021-04-21T09:25:11Z',
+                ],
+                'payment_info' => [
+                    'card_type' => 'Credit',
+                    'card_scheme' => 'Visa',
+                    'payment_description' => '4111 11## #### 1111',
+                ],
+            ], 200));
 
         $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
             ->setCart($this->cart)
@@ -111,11 +111,11 @@ class FollowUpTransactionTest extends TestCase
                 'tran_type' => $transactionType,
                 'cart_currency' => 'SAR',
                 'cart_amount' => '80.00',
-                "payment_result" => [
-                    "response_status" => "D",
-                    "response_code" => "320",
-                    "response_message" => "Unable to refund",
-                    "transaction_time" => "2021-04-21T09:33:54Z",
+                'payment_result' => [
+                    'response_status' => 'D',
+                    'response_code' => '320',
+                    'response_message' => 'Unable to refund',
+                    'transaction_time' => '2021-04-21T09:33:54Z',
                 ],
             ], 200));
 
@@ -136,19 +136,19 @@ class FollowUpTransactionTest extends TestCase
             ->getMock();
         $tranRef = $this->faker->text(9);
         $mock->expects($this->once())->method('post')
-            ->with($this->equalTo($config->get('paytabs_api') . 'payment/query'),
+            ->with($this->equalTo($config->get('paytabs_api').'payment/query'),
                 $this->equalTo([
                     'profile_id' => $config->get('profile_id'),
                     'tran_ref' => $tranRef,
                 ])
             )->willReturn(response()->json([
-            'tran_ref' => 'TST2227200594762',
-            'tran_type' => 'Sale',
-            'cart_currency' => 'SAR',
-            'cart_amount' => '80.00',
-            'return' => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
-            'redirect_url' => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
-        ], 200));
+                'tran_ref' => 'TST2227200594762',
+                'tran_type' => 'Sale',
+                'cart_currency' => 'SAR',
+                'cart_amount' => '80.00',
+                'return' => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
+                'redirect_url' => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
+            ], 200));
 
         $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
             ->setTransactionRef($tranRef)

@@ -69,7 +69,7 @@ class BillingCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/stubs/billing.stub';
+        return __DIR__.'/stubs/billing.stub';
     }
 
     /**
@@ -80,6 +80,6 @@ class BillingCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\Billing';
+        return $rootNamespace.'\Billing';
     }
 }

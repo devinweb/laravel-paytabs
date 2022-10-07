@@ -22,18 +22,18 @@ class LaravelPaytabsServiceProvider extends ServiceProvider
         Route::prefix('api')
             ->middleware('api')
         // ->namespace("Devinweb\LaravelPaytabs\Http\Controller")
-            ->group(__DIR__ . '/../routes/api.php');
+            ->group(__DIR__.'/../routes/api.php');
     }
 
     protected function registerPublishing()
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/paytabs.php' => config_path('paytabs.php'),
+                __DIR__.'/../config/paytabs.php' => config_path('paytabs.php'),
             ], 'paytabs-config');
-            if (!class_exists('CreateTransactionsTable')) {
+            if (! class_exists('CreateTransactionsTable')) {
                 $this->publishes([
-                    __DIR__ . '/../database/migrations/create_transactions_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_transactions_table.php'),
+                    __DIR__.'/../database/migrations/create_transactions_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_transactions_table.php'),
                 ], 'paytabs-migrations');
             }
             $this->commands([
@@ -48,11 +48,10 @@ class LaravelPaytabsServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/paytabs.php', 'paytabs');
+        $this->mergeConfigFrom(__DIR__.'/../config/paytabs.php', 'paytabs');
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-paytabs', function () {
-
             return new LaravelPaytabs();
         });
     }

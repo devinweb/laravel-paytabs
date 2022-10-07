@@ -30,8 +30,7 @@ class FinalizeTransaction
         if ($redirectUrl = Cache::get($request->tranRef)) {
             Cache::forget($request->tranRef);
 
-            return Redirect::to($redirectUrl . app(PrepareRedirectRequest::class)($request->all()));
+            return Redirect::to($redirectUrl.app(PrepareRedirectRequest::class)($request->all()));
         }
-
     }
 }

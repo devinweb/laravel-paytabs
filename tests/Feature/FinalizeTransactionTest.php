@@ -101,7 +101,7 @@ class FinalizeTransactionTest extends TestCase
                     'payment_description' => '4111 11## #### 1111',
                 ],
             ]),
-            200]);
+            200, ]);
 
         $response = $this->post('/api/paytabs/finalize', [
             'tranRef' => $this->transaction->transaction_ref,
@@ -133,11 +133,11 @@ class FinalizeTransactionTest extends TestCase
                 'cart_description' => $this->cart['description'],
                 'cart_currency' => 'SAR',
                 'cart_amount' => $this->cart['amount'],
-                "payment_result" => [
-                    "response_status" => "D",
-                    "response_code" => "320",
-                    "response_message" => "Unable to refund",
-                    "transaction_time" => "2021-04-21T09:33:54Z",
+                'payment_result' => [
+                    'response_status' => 'D',
+                    'response_code' => '320',
+                    'response_message' => 'Unable to refund',
+                    'transaction_time' => '2021-04-21T09:33:54Z',
                 ],
                 'payment_info' => [
                     'card_type' => 'Credit',
@@ -145,7 +145,7 @@ class FinalizeTransactionTest extends TestCase
                     'payment_description' => '4111 11## #### 1111',
                 ],
             ]),
-            200]);
+            200, ]);
 
         $response = $this->post('/api/paytabs/finalize', [
             'tranRef' => $this->transaction->transaction_ref,

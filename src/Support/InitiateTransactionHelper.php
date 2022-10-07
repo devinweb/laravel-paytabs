@@ -46,6 +46,7 @@ final class InitiateTransactionHelper extends TransactionHelper
         $this->save($response, 'pending', $user);
         $this->cacheRedirectUrl($response['tran_ref'], $redirectUrl ?: $config->get('redirect_url'));
         event(new TransactionInitiated($response));
+
         return $response;
     }
 
@@ -71,7 +72,7 @@ final class InitiateTransactionHelper extends TransactionHelper
                 'tran_type' => $this->transactionType,
                 'tran_class' => $this->transactionClass,
                 'paypage_lang' => $config->get('lang'),
-                'return' => config('app.url') . '/api/paytabs/finalize',
+                'return' => config('app.url').'/api/paytabs/finalize',
             ],
 
             $this->getCartDetails($config, $cart),
@@ -90,14 +91,15 @@ final class InitiateTransactionHelper extends TransactionHelper
      */
     protected function validateTransaction()
     {
-        if (!TransactionType::isInitiateType($this->transactionType)) {
+        if (! TransactionType::isInitiateType($this->transactionType)) {
             throw new InvalidArgumentException("Transaction type {$this->transactionType} not supported.");
         }
 
-        if (!in_array($this->transactionClass, TransactionClass::values())) {
+        if (! in_array($this->transactionClass, TransactionClass::values())) {
             throw new InvalidArgumentException("Transaction class {$this->transactionClass} not supported.");
         }
     }
+
     public function setTransactionDetails($billing, $shipping)
     {
         $this->billing = $billing;
@@ -112,7 +114,6 @@ final class InitiateTransactionHelper extends TransactionHelper
      */
     protected function getCustomerDetails(Model $customer = null): array
     {
-
         return [
             'customer_details' => [
                 'name' => $customer->name ?: '',
@@ -126,8 +127,8 @@ final class InitiateTransactionHelper extends TransactionHelper
                 'ip' => Request::ip(),
             ],
         ];
-
     }
+
     /**
      * Prepare customer details.
      *
@@ -149,6 +150,5 @@ final class InitiateTransactionHelper extends TransactionHelper
                 'ip' => Request::ip(),
             ],
         ] : [];
-
     }
 }
