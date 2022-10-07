@@ -7,7 +7,9 @@ use Devinweb\LaravelPaytabs\Enums\TransactionType;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Support\HttpRequest;
 use Devinweb\LaravelPaytabs\Tests\TestCase;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 
 class InitiateTransactionTest extends TestCase
 {
@@ -43,6 +45,9 @@ class InitiateTransactionTest extends TestCase
     /** @test */
     public function a_transaction_can_be_initiated_successfully()
     {
+        $initialDispatcher = Event::getFacadeRoot();
+        Event::fake();
+        Model::setEventDispatcher($initialDispatcher);
         $config = LaravelPaytabs::config();
         $transactionType = $this->faker->randomElement([TransactionType::SALE, TransactionType::AUTH]);
 
@@ -94,6 +99,9 @@ class InitiateTransactionTest extends TestCase
     /** @test */
     public function redirect_url_is_cached_successfully()
     {
+        $initialDispatcher = Event::getFacadeRoot();
+        Event::fake();
+        Model::setEventDispatcher($initialDispatcher);
         $config = LaravelPaytabs::config();
         $url = $this->faker->url;
         $transactionType = $this->faker->randomElement([TransactionType::SALE, TransactionType::AUTH]);
@@ -129,6 +137,9 @@ class InitiateTransactionTest extends TestCase
     /** @test */
     public function page_settings_are_added_to_initiate_transaction_request()
     {
+        $initialDispatcher = Event::getFacadeRoot();
+        Event::fake();
+        Model::setEventDispatcher($initialDispatcher);
         $config = LaravelPaytabs::config();
         $transactionType = $this->faker->randomElement([TransactionType::SALE, TransactionType::AUTH]);
 

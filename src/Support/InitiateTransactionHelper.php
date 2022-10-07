@@ -4,6 +4,7 @@ namespace Devinweb\LaravelPaytabs\Support;
 
 use Devinweb\LaravelPaytabs\Enums\TransactionClass;
 use Devinweb\LaravelPaytabs\Enums\TransactionType;
+use Devinweb\LaravelPaytabs\Events\TransactionInitiated;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;

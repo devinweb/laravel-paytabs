@@ -163,9 +163,9 @@ class LaravelPaytabs
      *
      * @return $this
      */
-    public function addSipping(BillingInterface $shipping)
+    public function addShipping(BillingInterface $shipping)
     {
-        $this->shippingDetails = $billing->getData();
+        $this->shippingDetails = $shipping->getData();
 
         return $this;
     }

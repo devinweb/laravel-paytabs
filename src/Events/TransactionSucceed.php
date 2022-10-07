@@ -18,6 +18,6 @@ class TransactionSucceed
      */
     public function __construct(array $transaction)
     {
-        $this->$transaction = $transaction;
+        $this->transaction = $transaction;
     }
 }

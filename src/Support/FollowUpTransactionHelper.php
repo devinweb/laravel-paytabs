@@ -4,6 +4,8 @@ namespace Devinweb\LaravelPaytabs\Support;
 
 use Devinweb\LaravelPaytabs\Enums\TransactionClass;
 use Devinweb\LaravelPaytabs\Enums\TransactionType;
+use Devinweb\LaravelPaytabs\Events\TransactionFail;
+use Devinweb\LaravelPaytabs\Events\TransactionSucceed;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Models\Transaction;
 use InvalidArgumentException;

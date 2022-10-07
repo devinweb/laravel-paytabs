@@ -8,7 +8,9 @@ use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Http\Requests\FinalizeTransactionRequest;
 use Devinweb\LaravelPaytabs\Models\Transaction;
 use Devinweb\LaravelPaytabs\Tests\TestCase;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Validator;
@@ -65,6 +67,8 @@ class FinalizeTransactionTest extends TestCase
     /** @test */
     public function transaction_can_be_finalized_successfully()
     {
+        Event::fake();
+        Model::setEventDispatcher(Event::getFacadeRoot());
         $config = LaravelPaytabs::config();
         $cacheDriver = app('cache')->driver();
         Cache::shouldReceive('driver')->andReturn($cacheDriver);
@@ -95,7 +99,7 @@ class FinalizeTransactionTest extends TestCase
                     'payment_description' => '4111 11## #### 1111',
                 ],
             ]),
-            200, ]);
+            200]);
 
         $response = $this->post('/api/paytabs/finalize', [
             'tranRef' => $this->transaction->transaction_ref,

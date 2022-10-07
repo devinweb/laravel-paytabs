@@ -2,6 +2,8 @@
 
 namespace Devinweb\LaravelPaytabs\Actions;
 
+use Devinweb\LaravelPaytabs\Events\TransactionFail;
+use Devinweb\LaravelPaytabs\Events\TransactionSucceed;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade;
 use Devinweb\LaravelPaytabs\Models\Transaction;
 use Illuminate\Http\Request;
