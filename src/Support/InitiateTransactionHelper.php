@@ -8,6 +8,7 @@ use Devinweb\LaravelPaytabs\Events\TransactionInitiated;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use InvalidArgumentException;
@@ -122,7 +123,7 @@ final class InitiateTransactionHelper extends TransactionHelper
                 'state' => Arr::has($this->billing, 'state') ? $this->billing['state'] : '',
                 'country' => Arr::has($this->billing, 'country') ? $this->billing['country'] : '',
                 'zip' => Arr::has($this->billing, 'zip') ? $this->billing['zip'] : '',
-                'ip' => \Request::ip(),
+                'ip' => Request::ip(),
             ],
         ];
 
@@ -145,7 +146,7 @@ final class InitiateTransactionHelper extends TransactionHelper
                 'state' => Arr::has($this->shipping, 'state') ? $this->shipping['state'] : '',
                 'country' => Arr::has($this->shipping, 'country') ? $this->shipping['country'] : '',
                 'zip' => Arr::has($this->shipping, 'zip') ? $this->shipping['zip'] : '',
-                'ip' => \Request::ip(),
+                'ip' => Request::ip(),
             ],
         ] : [];
 

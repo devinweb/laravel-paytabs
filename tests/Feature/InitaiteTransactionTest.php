@@ -9,6 +9,7 @@ use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Support\HttpRequest;
 use Devinweb\LaravelPaytabs\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 
@@ -76,7 +77,7 @@ class InitiateTransactionTest extends TestCase
                         'state' => null,
                         'country' => null,
                         'zip' => null,
-                        'ip' => \Request::ip(),
+                        'ip' => Request::ip(),
                     ],
                 ])
             )->willReturn(response()->json([
