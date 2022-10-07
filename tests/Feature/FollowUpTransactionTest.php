@@ -4,6 +4,8 @@ namespace Devinweb\LaravelPaytabs\Tests\Feature;
 
 use Devinweb\LaravelPaytabs\Enums\TransactionClass;
 use Devinweb\LaravelPaytabs\Enums\TransactionType;
+use Devinweb\LaravelPaytabs\Events\TransactionFail;
+use Devinweb\LaravelPaytabs\Events\TransactionSucceed;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Support\HttpRequest;
 use Devinweb\LaravelPaytabs\Tests\TestCase;
@@ -18,6 +20,7 @@ class FollowUpTransactionTest extends TestCase
     {
         parent::setUp();
         $this->cart = $this->createCart();
+        $this->user = $this->createCustomer();
     }
 
     /** @test */
@@ -41,8 +44,9 @@ class FollowUpTransactionTest extends TestCase
     /** @test */
     public function a_follow_up_transaction_action_can_be_done_successfully()
     {
+        $initialDispatcher = Event::getFacadeRoot();
         Event::fake();
-        Model::setEventDispatcher(Event::getFacadeRoot());
+        Model::setEventDispatcher($initialDispatcher);
         $config = LaravelPaytabs::config();
         $transactionType = $this->faker->randomElement([TransactionType::REFUND, TransactionType::CAPTURE, TransactionType::VOID]);
 
@@ -67,14 +71,60 @@ class FollowUpTransactionTest extends TestCase
             'tran_type' => $transactionType,
             'cart_currency' => 'SAR',
             'cart_amount' => '80.00',
-            'return' => "https:\/\/paytabs.me\/api\/paytabs\/finalize",
-            'redirect_url' => "https:\/\/secure.paytabs.sa\/payment\/page\/59C69E8A82E43A53A77C3A89F56223DB9917730B9BF1870B10493B25",
+            "payment_result" => [
+                "response_status" => "A",
+                "response_code" => "G97111",
+                "response_message" => "Authorised",
+                "transaction_time" => "2021-04-21T09:25:11Z",
+            ],
+            "payment_info" => [
+                "card_type" => "Credit",
+                "card_scheme" => "Visa",
+                "payment_description" => "4111 11## #### 1111",
+            ],
         ], 200));
 
         $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
             ->setCart($this->cart)
+            ->setCustomer($this->user)
             ->setTransactionRef($tranRef)
             ->followUpTransaction($transactionType, TransactionClass::ECOM);
+        Event::assertDispatched(TransactionSucceed::class);
+    }
+
+    /** @test */
+    public function transaction_fail_event_dispatched_when_a_follow_up_transaction_fail()
+    {
+        $initialDispatcher = Event::getFacadeRoot();
+        Event::fake();
+        Model::setEventDispatcher($initialDispatcher);
+        $config = LaravelPaytabs::config();
+        $transactionType = $this->faker->randomElement([TransactionType::REFUND, TransactionType::CAPTURE, TransactionType::VOID]);
+
+        $mock = $this->getMockBuilder(HttpRequest::class)
+            ->setMethods(['post'])
+            ->getMock();
+        $tranRef = $this->faker->text(9);
+        $mock->expects($this->once())->method('post')
+            ->willReturn(response()->json([
+                'tran_ref' => 'TST2227200594762',
+                'tran_type' => $transactionType,
+                'cart_currency' => 'SAR',
+                'cart_amount' => '80.00',
+                "payment_result" => [
+                    "response_status" => "D",
+                    "response_code" => "320",
+                    "response_message" => "Unable to refund",
+                    "transaction_time" => "2021-04-21T09:33:54Z",
+                ],
+            ], 200));
+
+        $transaction = LaravelPaytabs::injectHttpRequestHandler($mock)
+            ->setCart($this->cart)
+            ->setCustomer($this->user)
+            ->setTransactionRef($tranRef)
+            ->followUpTransaction($transactionType, TransactionClass::ECOM);
+        Event::assertDispatched(TransactionFail::class);
     }
 
     /** @test */

@@ -4,6 +4,7 @@ namespace Devinweb\LaravelPaytabs\Tests\Feature;
 
 use Devinweb\LaravelPaytabs\Enums\TransactionClass;
 use Devinweb\LaravelPaytabs\Enums\TransactionType;
+use Devinweb\LaravelPaytabs\Events\TransactionInitiated;
 use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade as LaravelPaytabs;
 use Devinweb\LaravelPaytabs\Support\HttpRequest;
 use Devinweb\LaravelPaytabs\Tests\TestCase;
@@ -167,5 +168,6 @@ class InitiateTransactionTest extends TestCase
             ->setCustomer($this->user)
             ->setCart($this->cart)
             ->initiate($transactionType, TransactionClass::ECOM);
+        Event::assertDispatched(TransactionInitiated::class);
     }
 }
