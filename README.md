@@ -289,7 +289,7 @@ This package fires three events during the process of transaction: `TransactionI
 | --------------------------------------------------- | ---------------------- |
 | Devinweb\LaravelPaytabs\Events\TransactionInitiated | Transaction initiated  |
 | Devinweb\LaravelPaytabs\Events\TransactionSucceed   | Successful transaction |
-| Devinweb\LaravelPaytabs\Events\TransactionFail        Transaction fail       |
+| Devinweb\LaravelPaytabs\Events\TransactionFail      |  Transaction fail       |
 
 The content of the events is the response returned by the transaction api.
 
