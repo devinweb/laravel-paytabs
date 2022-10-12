@@ -1,0 +1,20 @@
+<?php
+
+namespace DummyNamespace;
+
+use Devinweb\LaravelPaytabs\Contracts\BillingInterface;
+
+class DummyClass implements BillingInterface
+{
+    /**
+     * Get the billing data.
+     *
+     * @return array
+     */
+    public function getData(): array
+    {
+        return [
+            //
+        ];
+    }
+}
