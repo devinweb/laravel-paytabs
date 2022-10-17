@@ -24,6 +24,9 @@ class FinalizeTransaction
             ]);
             event(new TransactionSucceed($response));
         } else {
+            $transaction->update([
+                'status' => 'failed'
+            ]);
             event(new TransactionFail($response));
         }
 
