@@ -124,7 +124,8 @@ use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade;
 $paytabs = LaravelPaytabsFacade::setRedirectUrl($url);
 
 ```
-If you use one redirect url for all the payments inside your project, you can add it to the .env as explained [above](#paytabs-keys).
+⚠️ If you use one redirect url for all the payments inside your project, you can add it to the .env as explained [above](#paytabs-keys).
+
 
 #### Framed Hosted Payment Page
 To display the hosted payment page in an embed frame within the merchant website, you can call `framedPage`. 
@@ -176,7 +177,8 @@ use Devinweb\LaravelPaytabs\Facades\LaravelPaytabsFacade;
 
 $paytabs = LaravelPaytabsFacade::hideShipping();
 ```
-If the billing details are already added, this function will hide the billing section as well.
+
+⚠️️ If the billing details are already added, this function will hide the billing section as well.
 
 
 #### Generate the hosted payment page
@@ -218,7 +220,26 @@ A row with `status=pending` will be added to the transactions table and a `Trans
 
 }
 ```
-After visiting the generated URL and finalizing your payment, the transaction status will be changed to `paid` and you will be redirected to your return url. A `TransactionSucceed` or a `TransactionFail` event will be fired.
+After visiting the generated URL and finalizing your payment, the transaction status will be changed to `paid` or `failed` and you will be redirected to your return url. A `TransactionSucceed` or a `TransactionFail` event will be fired.
+The payment result details will be posted to the redirect URL, as the example shown below:
+
+```
+// Successful transaction response example
+acquirerMessage= 
+&acquirerRRN= 
+&cartId=cart_11111 
+&customerEmail=imane%devinweb.com 
+&respCode=G96376 
+&respMessage=Authorised 
+&respStatus=A 
+&token= 
+&tranRef=TST2110400143785 
+&signature=db333934b8bd8d5f94d90ab28c72831d563dc10bb196ebd78a300af7df8fad7
+Generic
+```
+You can visit the paytabs [official documentation](https://support.paytabs.com/en/support/solutions/articles/60000711358-what-is-response-code-vs-the-response-status-) to learn more about other paytabs Response Code/Status.
+
+
 ### Follow up a transaction
 After initiating or finalizing your payment, you may need to do some operations on it. 
 #### Get a transaction by reference
@@ -262,7 +283,8 @@ $transaction = LaravelPaytabsFacade::setTransactionRef($transactionRef)
   }
 }
 ```
-You can visit the paytabs [official documentation](https://support.paytabs.com/en/support/solutions/articles/60000711358-what-is-response-code-vs-the-response-status-) to learn more about payment_result section.
+⚠️ You can visit the paytabs [official documentation ](https://support.paytabs.com/en/support/solutions/articles/60000711358-what-is-response-code-vs-the-response-status) to learn more about payment_result section.
+
 #### Refund, Capture or Void transaction
 > Refund request is available for those Authenticated Sale transactions or Authenticated Capture transactions.
 
