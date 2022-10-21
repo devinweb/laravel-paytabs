@@ -26,8 +26,6 @@ class CreateTransactionsTable extends Migration
             $table->json('data')->nullable();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('parent')->references('transaction_ref')->on('transactions')
-                ->onUpdate('cascade')->onDelete('set null');
 
             $table->timestamps();
         });
